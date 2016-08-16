@@ -1,0 +1,63 @@
+{
+    "behavior-header": {
+        "type":        "header",
+        "description": "Behavior"
+    },
+
+    "init-delay": {
+        "type":        "spinbutton",
+        "default":     5,
+        "min":         0,
+        "max":         30,
+        "step":        1,
+        "units":       "seconds",
+        "description": "Initial delay: "
+    },
+
+    "animation-duration" : {
+        "type":        "spinbutton",
+        "default":     500,
+        "min":         0,
+        "max":         2000,
+        "step":        50,
+        "units":       "milliseconds",
+        "description": "Animation duration: "
+    },
+
+    "sep-1": {
+        "type": "separator"
+    },
+
+    "appearance-header": {
+        "type":        "header",
+        "description": "Appearance"
+    },
+
+    "expand-icon-name": {
+        "type":         "iconfilechooser",
+        "default" :     "pan-start",
+        "description" : "Expand icon: "
+    },
+
+    "collapse-icon-name": {
+        "type":         "iconfilechooser",
+        "default" :     "pan-end",
+        "description" : "Collapse icon: "
+    },
+
+    "tray-icon-hpadding": {
+        "type":        "spinbutton",
+        "default":     5,
+        "min":         0,
+        "max":         20,
+        "step":        1,
+        "units":       "px",
+        "description": "Horizontal padding of tray icons: "
+    },
+
+    "icon-visibility-list": {
+        "type":        "generic",
+        "default":     "{}",
+        "description": "Internal use"
+    }
+}
