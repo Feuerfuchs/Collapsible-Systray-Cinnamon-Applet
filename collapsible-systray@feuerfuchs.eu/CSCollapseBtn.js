@@ -1,5 +1,6 @@
 const Gio                                = imports.gi.Gio;
 const St                                 = imports.gi.St;
+const Tooltips                           = imports.ui.tooltips;
 const Applet                             = imports.ui.applet;
 
 const DEFAULT_PANEL_HEIGHT               = Applet.DEFAULT_PANEL_HEIGHT;
@@ -13,10 +14,10 @@ function CSCollapseBtn(applet) {
 
 CSCollapseBtn.prototype = {
     _init: function(applet) {
-        this.applet = applet;
-        this.actor  = new St.Button({ style_class: 'applet-box' });
-        this.icon   = new St.Icon({ reactive: true, track_hover: true, style_class: 'applet-icon' });
-        this.applet = applet;
+        this.applet  = applet;
+        this.actor   = new St.Button({ style_class: 'applet-box' });
+        this.icon    = new St.Icon({ reactive: true, track_hover: true, style_class: 'applet-icon' });
+        this.applet  = applet;
 
         this.actor.set_child(this.icon);
 
