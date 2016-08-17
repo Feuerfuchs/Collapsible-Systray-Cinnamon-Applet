@@ -415,6 +415,8 @@ CollapsibleSystrayApplet.prototype = {
     _onVisualSettingsUpdated: function() {
         this.collapseBtn.setIsExpanded(!this.iconsAreHidden);
         Main.statusIconDispatcher.redisplay();
+        this._removeIndicatorSupport();
+        this._addIndicatorSupport();
     },
 
     /*
@@ -485,6 +487,14 @@ CollapsibleSystrayApplet.prototype = {
     //
     // Overrides
     // ---------------------------------------------------------------------------------
+
+    _removeIndicatorSupport: function() {
+        global.log("[" + uuid + "] Event: _removeIndicatorSupport");
+
+        CinnamonSystray.MyApplet.prototype._removeIndicatorSupport.call(this);
+
+        this._shellIndicators = [];
+    },
 
     /*
      * Disable the collapse/expand button if the panel is in edit mode so the user can
@@ -602,7 +612,22 @@ CollapsibleSystrayApplet.prototype = {
             let iconActor = this._shellIndicators[appIndicator.id];
             if (iconActor !== undefined) {
                 this.actor.remove_actor(iconActor.actor);
-                this.indicatorContainer.add(iconActor.actor);
+
+                if (!this.dontMoveVisibleIcons) {
+                    this.indicatorContainer.add(iconActor.actor);
+                } else {
+                    let index    = 0;
+                    let children = this.indicatorContainer.get_children();
+                    for (let i = children.length - 1; i >= 0; i--) {
+                        let child = children[i];
+                        if (this.iconVisibilityList[child._indicator.id]) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    this.indicatorContainer.insert_child_at_index(iconActor.actor, index);
+                }
 
                 iconActor.actor.csDisable = function() {
                     iconActor.actor.set_reactive(false);
