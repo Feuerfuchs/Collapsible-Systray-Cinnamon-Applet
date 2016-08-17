@@ -578,8 +578,6 @@ CollapsibleSystrayApplet.prototype = {
                 let children = this.manager_container.get_children();
                 index = children.length;
             }
-
-            global.log("[" + uuid + "] <<<< " + role + " - " + index);
         }
 
         let iconWrap        = new St.BoxLayout({ style_class: 'applet-box', reactive: true, track_hover: !this.noHoverForTrayIcons });
