@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: collapsible-systray@feuerfuchs.eu 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 12:07+0200\n"
-"PO-Revision-Date: 2016-08-17 12:10+0200\n"
+"POT-Creation-Date: 2016-08-17 17:38+0200\n"
+"PO-Revision-Date: 2016-08-17 17:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: Feuerfuchs\n"
 "Language: de\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Poedit 1.8.8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: applet.js:105
+#: applet.js:109
 msgid "Active applications"
 msgstr "Aktive Anwendungen"
 
-#: applet.js:106
+#: applet.js:110
 msgid "Inactive applications"
 msgstr "Inaktive Anwendungen"
 
@@ -34,6 +34,11 @@ msgstr "Collapsible Systray"
 msgid "A replacement for the abandoned System Tray Collapsible Cinnamon applet"
 msgstr "Ein Nachfolger für das populäre System Tray Collapsible Cinnamon-Applet"
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-
+#. hover->description
+msgid "Expand on hover"
+msgstr "Beim Hovern erweitern"
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->animation-
 #. duration->description
 msgid "Animation duration: "
@@ -41,8 +46,17 @@ msgstr "Animationsdauer: "
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->animation-
 #. duration->units
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-on-leave-
+#. delay->units
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-hover-
+#. delay->units
 msgid "milliseconds"
 msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-on-leave-
+#. delay->description
+msgid "Collapse on un-hover delay: "
+msgstr "Beim Verlassen verkleinern"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-icon-
 #. name->description
@@ -69,6 +83,16 @@ msgstr "Horizontaler Innenabstand von Symbolen:"
 msgid "px"
 msgstr ""
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->dont-move-visible-
+#. icons->description
+msgid "Don't move visible icons on expand/collapse"
+msgstr "Symbole beim Erweitern/Verkleinern nicht bewegen"
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
+#. icons->description
+msgid "Disable hover effect for tray icons"
+msgstr "Hover-Effekt für Tray-icons deaktivieren"
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->appearance-
 #. header->description
 msgid "Appearance"
@@ -83,10 +107,23 @@ msgstr "Verzögerung der Anfangsanimation: "
 msgid "seconds"
 msgstr ""
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-hover-
+#. delay->description
+msgid "Expand on hover delay: "
+msgstr "Beim Hovern erweitern - Verzögerung"
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-on-
+#. leave->description
+msgid "Collapse on un-hover"
+msgstr "Beim Verlassen verkleinern - Verzögerung"
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->behavior-
 #. header->description
 msgid "Behavior"
 msgstr "Verhalten"
+
+#~ msgid "Don't move visible icons on collapse"
+#~ msgstr "Symbole beim verkleinern/erweitern nicht bewegen"
 
 #~ msgid "Initial delay: "
 #~ msgstr "Verzögerung der Anfangsanimation: "

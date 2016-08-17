@@ -4,6 +4,50 @@
         "description": "Behavior"
     },
 
+    "animation-duration": {
+        "type":        "spinbutton",
+        "default":     500,
+        "min":         0,
+        "max":         2000,
+        "step":        50,
+        "units":       "milliseconds",
+        "description": "Animation duration: "
+    },
+
+    "expand-on-hover": {
+        "type":        "checkbox",
+        "default":     false,
+        "description": "Expand on hover"
+    },
+
+    "expand-on-hover-delay": {
+        "type":        "spinbutton",
+        "default":     1000,
+        "min":         0,
+        "max":         10000,
+        "step":        100,
+        "dependency":  "expand-on-hover",
+        "units":       "milliseconds",
+        "description": "Expand on hover delay: "
+    },
+
+    "collapse-on-leave": {
+        "type":        "checkbox",
+        "default":     false,
+        "description": "Collapse on un-hover"
+    },
+
+    "collapse-on-leave-delay": {
+        "type":        "spinbutton",
+        "default":     1000,
+        "min":         0,
+        "max":         10000,
+        "step":        100,
+        "dependency":  "collapse-on-leave",
+        "units":       "milliseconds",
+        "description": "Collapse on un-hover delay: "
+    },
+
     "init-delay": {
         "type":        "spinbutton",
         "default":     5,
@@ -14,16 +58,6 @@
         "description": "Delay until initial collapse: "
     },
 
-    "animation-duration" : {
-        "type":        "spinbutton",
-        "default":     500,
-        "min":         0,
-        "max":         2000,
-        "step":        50,
-        "units":       "milliseconds",
-        "description": "Animation duration: "
-    },
-
     "sep-1": {
         "type": "separator"
     },
@@ -31,6 +65,18 @@
     "appearance-header": {
         "type":        "header",
         "description": "Appearance"
+    },
+
+    "no-hover-for-tray-icons": {
+        "type":        "checkbox",
+        "default":     false,
+        "description": "Disable hover effect for tray icons"
+    },
+
+    "dont-move-visible-icons": {
+        "type":        "checkbox",
+        "default":     false,
+        "description": "Don't move visible icons on expand/collapse"
     },
 
     "expand-icon-name": {

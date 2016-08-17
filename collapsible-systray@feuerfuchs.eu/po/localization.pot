@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 12:07+0200\n"
+"POT-Creation-Date: 2016-08-17 17:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: applet.js:105
+#: applet.js:109
 msgid "Active applications"
 msgstr ""
 
-#: applet.js:106
+#: applet.js:110
 msgid "Inactive applications"
 msgstr ""
 
@@ -34,6 +34,11 @@ msgid ""
 "A replacement for the abandoned System Tray Collapsible Cinnamon applet"
 msgstr ""
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-
+#. hover->description
+msgid "Expand on hover"
+msgstr ""
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->animation-
 #. duration->description
 msgid "Animation duration: "
@@ -41,7 +46,16 @@ msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->animation-
 #. duration->units
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-on-leave-
+#. delay->units
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-hover-
+#. delay->units
 msgid "milliseconds"
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-on-leave-
+#. delay->description
+msgid "Collapse on un-hover delay: "
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-icon-
@@ -69,6 +83,16 @@ msgstr ""
 msgid "px"
 msgstr ""
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->dont-move-visible-
+#. icons->description
+msgid "Don't move visible icons on expand/collapse"
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
+#. icons->description
+msgid "Disable hover effect for tray icons"
+msgstr ""
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->appearance-
 #. header->description
 msgid "Appearance"
@@ -81,6 +105,16 @@ msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-delay->units
 msgid "seconds"
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-hover-
+#. delay->description
+msgid "Expand on hover delay: "
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-on-
+#. leave->description
+msgid "Collapse on un-hover"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->behavior-
