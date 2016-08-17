@@ -11,7 +11,7 @@
         "max":         30,
         "step":        1,
         "units":       "seconds",
-        "description": "Initial delay: "
+        "description": "Delay until initial collapse: "
     },
 
     "animation-duration" : {

@@ -32,6 +32,11 @@ function CollapsibleSystrayApplet(orientation, panel_height, instance_id) {
 CollapsibleSystrayApplet.prototype = {
     __proto__: CinnamonSystray.MyApplet.prototype,
 
+    Menu: {
+        ACTIVE_APPLICATIONS:   true,
+        INACTIVE_APPLICATIONS: false
+    },
+
     _init: function(orientation, panel_height, instance_id) {
         //
         // Expand/collapse button
@@ -154,7 +159,7 @@ CollapsibleSystrayApplet.prototype = {
             }
         }
 
-        this._addActiveApplicationMenuItem(id);
+        this._addApplicationMenuItem(id, this.Menu.ACTIVE_APPLICATIONS);
     },
 
     /*
@@ -163,50 +168,55 @@ CollapsibleSystrayApplet.prototype = {
     _unregisterAppIcon: function(id) {
         delete this.registeredAppIcons[id];
 
-        this._addInactiveApplicationMenuItem(id);
+        this._addApplicationMenuItem(id, this.Menu.INACTIVE_APPLICATIONS);
     },
 
     /*
      * Create a menu entry for the specified icon in the "active applications" section
      */
-    _addActiveApplicationMenuItem: function(id) {
-        // If there's a menu item in the "inactive applications" section, delete it
-        if (this.inactiveMenuItems.hasOwnProperty(id)) {
-            this.inactiveMenuItems[id].actor.destroy();
-            delete this.inactiveMenuItems[id];
+    _addApplicationMenuItem: function(id, activeMenu) {
+        let curMenuItems   = activeMenu == this.Menu.ACTIVE_APPLICATIONS ? this.activeMenuItems        : this.inactiveMenuItems;
+        let curMenu        = activeMenu == this.Menu.ACTIVE_APPLICATIONS ? this.cmitemActiveItems.menu : this.cmitemInactiveItems.menu;
+        let otherMenuItems = activeMenu == this.Menu.ACTIVE_APPLICATIONS ? this.inactiveMenuItems      : this.activeMenuItems;
+        let menuItem       = null;
+
+        // If there's a menu item in the other menu, delete it
+        if (otherMenuItems.hasOwnProperty(id)) {
+            otherMenuItems[id].actor.destroy();
+            delete otherMenuItems[id];
         }
 
-        let menuItem = new PopupMenu.PopupSwitchMenuItem(id, this.iconVisibilityList[id]);
-        menuItem.connect('toggled', Lang.bind(this, function(o, state) {
-            this._updateAppIconVisibility(id, state);
-        }));
-        this.cmitemActiveItems.menu.addMenuItem(menuItem);
-        this.activeMenuItems[id] = menuItem;
-    },
-
-    /*
-     * Create a menu entry for the specified icon in the "inactive applications" section
-     */
-    _addInactiveApplicationMenuItem: function(id) {
-        // If there's a menu item in the "active applications" section, delete it
-        if (this.activeMenuItems.hasOwnProperty(id)) {
-            this.activeMenuItems[id].actor.destroy();
-            delete this.activeMenuItems[id];
+        // If there's already a menu item in the current menu, do nothing
+        if (curMenuItems.hasOwnProperty(id)) {
+            return;
         }
 
-        let menuItem = new CSRemovableSwitchMenuItem.CSRemovableSwitchMenuItem(id, this.iconVisibilityList[id]);
-        menuItem.connect('toggled', Lang.bind(this, function(o, state) {
-            this._updateAppIconVisibility(id, state);
-        }));
-        menuItem.connect('remove', Lang.bind(this, function(o, state) {
-            delete this.iconVisibilityList[id];
-            this._saveAppIconVisibilityList();
+        switch (activeMenu) {
+            case this.Menu.ACTIVE_APPLICATIONS:
+                menuItem = new PopupMenu.PopupSwitchMenuItem(id, this.iconVisibilityList[id]);
+                menuItem.connect('toggled', Lang.bind(this, function(o, state) {
+                    this._updateAppIconVisibility(id, state);
+                }));
+                break;
 
-            menuItem.actor.destroy();
-            delete this.inactiveMenuItems[id];
-        }));
-        this.cmitemInactiveItems.menu.addMenuItem(menuItem);
-        this.inactiveMenuItems[id] = menuItem;
+            default:
+            case this.Menu.INACTIVE_APPLICATIONS:
+                menuItem = new CSRemovableSwitchMenuItem.CSRemovableSwitchMenuItem(id, this.iconVisibilityList[id]);
+                menuItem.connect('toggled', Lang.bind(this, function(o, state) {
+                    this._updateAppIconVisibility(id, state);
+                }));
+                menuItem.connect('remove', Lang.bind(this, function(o, state) {
+                    delete this.iconVisibilityList[id];
+                    this._saveAppIconVisibilityList();
+
+                    menuItem.actor.destroy();
+                    delete this.inactiveMenuItems[id];
+                }));
+                break;
+        }
+
+        curMenu.addMenuItem(menuItem);
+        curMenuItems[id] = menuItem;
     },
 
     /*
@@ -215,13 +225,12 @@ CollapsibleSystrayApplet.prototype = {
     _hideAppIcon: function(id, animate) {
         let actor = this.registeredAppIcons[id];
 
-        if (actor.animating) {
+        if (actor.hasOwnProperty('tweenParams')) {
             Tweener.removeTweens(actor);
             actor.tweenParams.onComplete.call(actor.tweenParams.onCompleteScope);
         }
 
         if (animate) {
-            actor.animating = true;
             actor.tweenParams = {
                 width:           0,
                 opacity:         0,
@@ -230,7 +239,6 @@ CollapsibleSystrayApplet.prototype = {
                 onCompleteScope: actor,
                 onComplete: function () {
                     delete this.tweenParams;
-                    this.animating = false;
                     this.csDisable();
                 }
             };
@@ -276,14 +284,13 @@ CollapsibleSystrayApplet.prototype = {
     _showAppIcon: function(id, animate) {
         let actor = this.registeredAppIcons[id];
 
-        if (actor.animating) {
+        if (actor.hasOwnProperty('tweenParams')) {
             Tweener.removeTweens(actor);
             actor.tweenParams.onComplete.call(actor.tweenParams.onCompleteScope);
         }
 
         if (animate) {
             actor.csEnable();
-            actor.animating = true;
             actor.tweenParams = {
                 width:           actor.origWidth,
                 opacity:         255,
@@ -292,7 +299,6 @@ CollapsibleSystrayApplet.prototype = {
                 onCompleteScope: actor,
                 onComplete: function () {
                     delete this.tweenParams;
-                    this.animating = false;
                 }
             };
             Tweener.addTween(actor, actor.tweenParams);
@@ -337,6 +343,7 @@ CollapsibleSystrayApplet.prototype = {
     _updateAppIconVisibility: function(id, state) {
         this.iconVisibilityList[id] = state;
 
+        // Application is active, show/hide the icon if necessary
         if (this.registeredAppIcons.hasOwnProperty(id)) {
             if (state) {
                 if (this.iconsAreHidden) {
@@ -361,11 +368,12 @@ CollapsibleSystrayApplet.prototype = {
 
             for (let id in this.iconVisibilityList) {
                 if (this.iconVisibilityList.hasOwnProperty(id) && !this.registeredAppIcons.hasOwnProperty(id)) {
-                    this._addInactiveApplicationMenuItem(id);
+                    this._addApplicationMenuItem(id, this.Menu.INACTIVE_APPLICATIONS);
                 }
             }
         } catch(e) {
             this.iconVisibilityList = {};
+            global.log("[" + uuid + "] Chouldn't load icon visibility list: " + e);
         }
     },
 
@@ -377,7 +385,8 @@ CollapsibleSystrayApplet.prototype = {
     },
 
     /*
-     * An applet settings has been changed
+     * An applet settings has been changed; reload collapse/expand button's icons
+     * and reload all tray icons
      */
     _onSettingsUpdated: function() {
         this.collapseBtn.setIsExpanded(!this.iconsAreHidden);
@@ -388,12 +397,20 @@ CollapsibleSystrayApplet.prototype = {
     // Overrides
     // ---------------------------------------------------------------------------------
 
+    /*
+     * Disable the collapse/expand button if the panel is in edit mode so the user can
+     * perform drag and drop on that button
+     */
     _setAppletReactivity: function() {
         CinnamonSystray.MyApplet.prototype._setAppletReactivity.call(this);
 
         this.collapseBtn.actor.set_reactive(this._draggable.inhibit);
     },
 
+    /*
+     * The Cinnamon applet invalidates all tray icons if this event occurs, so I have to
+     * unregister all tray icons when this happens
+     */
     _onBeforeRedisplay: function() {
         let children = this.manager_container.get_children();
         for (var i = 0; i < children.length; i++) {
@@ -403,6 +420,9 @@ CollapsibleSystrayApplet.prototype = {
         CinnamonSystray.MyApplet.prototype._onBeforeRedisplay.call(this);
     },
 
+    /*
+     * A tray icon has been removed; unregister it and destroay the wrapper
+     */
     _onTrayIconRemoved: function(o, icon) {
         this._unregisterAppIcon(icon.role);
 
@@ -411,20 +431,38 @@ CollapsibleSystrayApplet.prototype = {
         CinnamonSystray.MyApplet.prototype._onTrayIconRemoved.call(this, o, icon);
     },
 
+    /*
+     * Remove icon from tray, wrap it in an applet-box and re-add it. This way,
+     * tray icons are displayed like applets and thus integrate nicely in the panel.
+     */
     _insertStatusItem: function(role, icon, position) {
         if (icon.obsolete == true) {
             return;
         }
 
+        CinnamonSystray.MyApplet.prototype._insertStatusItem.call(this, role, icon, position);
+
+        let index    = 0;
+        let children = this.manager_container.get_children();
+        for (let i = children.length - 1; i >= 0; i--) {
+            let child = children[i];
+            if (child === icon) {
+                index = i;
+                break;
+            }
+        }
+
+        this.manager_container.remove_child(icon);
+
         let iconWrap        = new St.BoxLayout({ style_class: 'applet-box', reactive: true, track_hover: true });
-        let iconWrapContent = new St.Bin();
+        let iconWrapContent = new St.Bin({ child: icon });
         iconWrap.add_style_class_name('ff-collapsible-systray__status-icon');
         iconWrap.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
         iconWrap.add(iconWrapContent, { a_align: St.Align.MIDDLE, y_fill: false });
-        iconWrapContent.set_child(icon);
-        iconWrap.role = role;
-        icon.wrapper  = iconWrap;
-        icon.role     = role;
+        iconWrap.role          = role;
+        iconWrap._rolePosition = icon._rolePosition;
+        icon.wrapper           = iconWrap;
+        icon.role              = role;
         iconWrap.csDisable = function() {
             iconWrapContent.set_child(null);
         }
@@ -432,42 +470,18 @@ CollapsibleSystrayApplet.prototype = {
             iconWrapContent.set_child(icon);
         }
 
-        let children = this.manager_container.get_children();
-        let i;
-
-        for (i = children.length - 1; i >= 0; i--) {
-            let rolePosition = children[i]._rolePosition;
-            if (position > rolePosition) {
-                this.manager_container.insert_child_at_index(iconWrap, i + 1);
-                break;
-            }
-        }
-        if (i == -1) {
-            this.manager_container.insert_child_at_index(iconWrap, 0);
-        }
-
-        iconWrap._rolePosition = position;
-
-        if (this._scaleMode) {
-            let timerId = Mainloop.timeout_add(500, Lang.bind(this, function() {
-                this._resizeStatusItem(role, icon);
-                Mainloop.source_remove(timerId);
-            }));
-        } else {
-            icon.set_pivot_point(0.5, 0.5);
-            icon.set_scale((DEFAULT_ICON_SIZE * global.ui_scale) / icon.width,
-                           (DEFAULT_ICON_SIZE * global.ui_scale) / icon.height);
-        }
+        this.manager_container.insert_child_at_index(iconWrap, index);
 
         this._registerAppIcon(role, iconWrap);
     },
 
+    /*
+     * An AppIndicator has been added; prepare its actor and register the icon
+     */
     _onIndicatorAdded: function(manager, appIndicator) {
-        let canHandle = !(appIndicator.id in this._shellIndicators);
+        if (!(appIndicator.id in this._shellIndicators)) {
+            CinnamonSystray.MyApplet.prototype._onIndicatorAdded.call(this, manager, appIndicator);
 
-        CinnamonSystray.MyApplet.prototype._onIndicatorAdded.call(this, manager, appIndicator);
-
-        if (canHandle) {
             let iconActor = this._shellIndicators[appIndicator.id];
             if (iconActor !== undefined) {
                 this.actor.remove_actor(iconActor.actor);
@@ -485,6 +499,9 @@ CollapsibleSystrayApplet.prototype = {
         }
     },
 
+    /*
+     * An AppIndicator has been removed; unregister it
+     */
     _onIndicatorRemoved: function(manager, appIndicator) {
         let id = appIndicator.id;
 
@@ -493,6 +510,9 @@ CollapsibleSystrayApplet.prototype = {
         this._unregisterAppIcon(id);
     },
 
+    /*
+     * The applet has been removed from the panel; save settings
+     */
     on_applet_removed_from_panel: function () {
         CinnamonSystray.MyApplet.prototype.on_applet_removed_from_panel.call(this);
 
