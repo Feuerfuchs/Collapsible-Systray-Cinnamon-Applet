@@ -78,7 +78,6 @@ CollapsibleSystrayApplet.prototype = {
         this.signalManager      = new SignalManager.SignalManager(this);
         this.hovering           = false;
         this.hoverTimerID       = null;
-        this._shellIndicators   = [];
         this.registeredAppIcons = {};
         this.activeMenuItems    = {};
         this.inactiveMenuItems  = {};
@@ -220,6 +219,10 @@ CollapsibleSystrayApplet.prototype = {
                 menuItem = new PopupMenu.PopupSwitchMenuItem(id, this.iconVisibilityList[id]);
                 menuItem.connect('toggled', Lang.bind(this, function(o, state) {
                     this._updateAppIconVisibility(id, state);
+
+                    if (this.dontMoveVisibleIcons) {
+                        this._onVisualSettingsUpdated();
+                    }
                 }));
                 break;
 
@@ -491,9 +494,11 @@ CollapsibleSystrayApplet.prototype = {
     _removeIndicatorSupport: function() {
         global.log("[" + uuid + "] Event: _removeIndicatorSupport");
 
-        CinnamonSystray.MyApplet.prototype._removeIndicatorSupport.call(this);
+        this._shellIndicators.forEach(function(iconActor) {
+            this._unregisterAppIcon(iconActor._indicator.id);
+        });
 
-        this._shellIndicators = [];
+        CinnamonSystray.MyApplet.prototype._removeIndicatorSupport.call(this);
     },
 
     /*
@@ -569,14 +574,12 @@ CollapsibleSystrayApplet.prototype = {
         } else {
             this.manager_container.remove_child(icon);
 
-            let children = this.manager_container.get_children();
-            for (let i = children.length - 1; i >= 0; i--) {
-                let child = children[i];
-                if (this.iconVisibilityList[child.role]) {
-                    index = i;
-                    break;
-                }
+            if (!this.iconVisibilityList.hasOwnProperty(role) || this.iconVisibilityList[role]) {
+                let children = this.manager_container.get_children();
+                index = children.length;
             }
+
+            global.log("[" + uuid + "] <<<< " + role + " - " + index);
         }
 
         let iconWrap        = new St.BoxLayout({ style_class: 'applet-box', reactive: true, track_hover: !this.noHoverForTrayIcons });
@@ -604,40 +607,36 @@ CollapsibleSystrayApplet.prototype = {
      * An AppIndicator has been added; prepare its actor and register the icon
      */
     _onIndicatorAdded: function(manager, appIndicator) {
-        if (!(appIndicator.id in this._shellIndicators)) {
-            global.log("[" + uuid + "] Event: _onIndicatorAdded - " + appIndicator.id);
+        global.log("[" + uuid + "] Event: _onIndicatorAdded - " + appIndicator.id);
 
-            CinnamonSystray.MyApplet.prototype._onIndicatorAdded.call(this, manager, appIndicator);
+        CinnamonSystray.MyApplet.prototype._onIndicatorAdded.call(this, manager, appIndicator);
 
+        if (appIndicator.id in this._shellIndicators) {
             let iconActor = this._shellIndicators[appIndicator.id];
-            if (iconActor !== undefined) {
-                this.actor.remove_actor(iconActor.actor);
 
-                if (!this.dontMoveVisibleIcons) {
-                    this.indicatorContainer.add(iconActor.actor);
-                } else {
-                    let index    = 0;
+            this.actor.remove_actor(iconActor.actor);
+
+            if (!this.dontMoveVisibleIcons) {
+                this.indicatorContainer.add(iconActor.actor);
+            } else {
+                let index = 0;
+
+                if (!this.iconVisibilityList.hasOwnProperty(appIndicator.id) || this.iconVisibilityList[appIndicator.id]) {
                     let children = this.indicatorContainer.get_children();
-                    for (let i = children.length - 1; i >= 0; i--) {
-                        let child = children[i];
-                        if (this.iconVisibilityList[child._indicator.id]) {
-                            index = i;
-                            break;
-                        }
-                    }
-
-                    this.indicatorContainer.insert_child_at_index(iconActor.actor, index);
+                    index = children.length;
                 }
 
-                iconActor.actor.csDisable = function() {
-                    iconActor.actor.set_reactive(false);
-                }
-                iconActor.actor.csEnable = function() {
-                    iconActor.actor.set_reactive(true);
-                }
-
-                this._registerAppIcon(appIndicator.id, iconActor.actor);
+                this.indicatorContainer.insert_child_at_index(iconActor.actor, index);
             }
+
+            iconActor.actor.csDisable = function() {
+                iconActor.actor.set_reactive(false);
+            }
+            iconActor.actor.csEnable = function() {
+                iconActor.actor.set_reactive(true);
+            }
+
+            this._registerAppIcon(appIndicator.id, iconActor.actor);
         }
     },
 
