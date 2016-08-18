@@ -166,13 +166,21 @@ CollapsibleSystrayApplet.prototype = {
      * Add the specified icon to the item list and create a menu entry
      */
     _registerAppIcon: function(id, actor) {
-        if (this.registeredAppIcons.hasOwnProperty(id)) {
-            this._unregisterAppIcon(id);
+        if (!this.registeredAppIcons.hasOwnProperty(id)) {
+            this.registeredAppIcons[id] = [];
+        }
+
+        let instanceArray = this.registeredAppIcons[id];
+
+        for (let i = 0; i < instanceArray.length; i++) {
+            if (instanceArray.indexOf(actor) != -1) {
+                return;
+            }
         }
 
         actor.origWidth = actor.get_width();
 
-        this.registeredAppIcons[id] = actor;
+        instanceArray.push(actor);
 
         if (!this.iconVisibilityList.hasOwnProperty(id)) {
             this.iconVisibilityList[id] = true;
@@ -188,10 +196,17 @@ CollapsibleSystrayApplet.prototype = {
     /*
      * Remove the icon from the list and move the menu entry to the list of inactive applications
      */
-    _unregisterAppIcon: function(id) {
-        delete this.registeredAppIcons[id];
-
-        this._addApplicationMenuItem(id, this.Menu.INACTIVE_APPLICATIONS);
+    _unregisterAppIcon: function(id, actor) {
+        let instanceArray = this.registeredAppIcons[id];
+        let iconIndex     = instanceArray.indexOf(actor);
+        if (iconIndex != -1) {
+            instanceArray.splice(iconIndex, 1);
+        }
+        if (instanceArray.length == 0) {
+            delete instanceArray;
+            delete this.registeredAppIcons[id];
+            this._addApplicationMenuItem(id, this.Menu.INACTIVE_APPLICATIONS);
+        }
     },
 
     /*
@@ -250,30 +265,36 @@ CollapsibleSystrayApplet.prototype = {
      * Hide the specified icon, either with animation or without
      */
     _hideAppIcon: function(id, animate) {
-        let actor = this.registeredAppIcons[id];
+        let instances = this.registeredAppIcons[id];
 
-        if (actor.hasOwnProperty('tweenParams')) {
-            Tweener.removeTweens(actor);
-            actor.tweenParams.onComplete.call(actor.tweenParams.onCompleteScope);
-        }
+        global.log("[" + uuid + "] Hiding icon " + id + " - instances: " + instances.length);
 
-        if (animate) {
-            actor.tweenParams = {
-                width:           0,
-                opacity:         0,
-                time:            this.animationDuration / 1000,
-                transition:      'easeInOutQuart',
-                onCompleteScope: actor,
-                onComplete: function () {
-                    delete this.tweenParams;
-                    this.csDisable();
-                }
-            };
-            Tweener.addTween(actor, actor.tweenParams);
-        } else {
-            actor.set_width(0);
-            actor.set_opacity(0);
-            actor.csDisable();
+        for (let i = 0; i < instances.length; i++) {
+            let actor = instances[i];
+
+            if (actor.hasOwnProperty('tweenParams')) {
+                Tweener.removeTweens(actor);
+                actor.tweenParams.onComplete.call(actor.tweenParams.onCompleteScope);
+            }
+
+            if (animate) {
+                actor.tweenParams = {
+                    width:           0,
+                    opacity:         0,
+                    time:            this.animationDuration / 1000,
+                    transition:      'easeInOutQuart',
+                    onCompleteScope: actor,
+                    onComplete: function () {
+                        delete this.tweenParams;
+                        this.csDisable();
+                    }
+                };
+                Tweener.addTween(actor, actor.tweenParams);
+            } else {
+                actor.set_width(0);
+                actor.set_opacity(0);
+                actor.csDisable();
+            }
         }
     },
 
@@ -309,30 +330,36 @@ CollapsibleSystrayApplet.prototype = {
      * Unhide the specified icon, either with animation or without
      */
     _showAppIcon: function(id, animate) {
-        let actor = this.registeredAppIcons[id];
+        let instances = this.registeredAppIcons[id];
 
-        if (actor.hasOwnProperty('tweenParams')) {
-            Tweener.removeTweens(actor);
-            actor.tweenParams.onComplete.call(actor.tweenParams.onCompleteScope);
-        }
+        global.log("[" + uuid + "] Showing icon " + id + " - instances: " + instances.length);
 
-        if (animate) {
-            actor.csEnable();
-            actor.tweenParams = {
-                width:           actor.origWidth,
-                opacity:         255,
-                time:            this.animationDuration / 1000,
-                transition:      'easeInOutQuart',
-                onCompleteScope: actor,
-                onComplete: function () {
-                    delete this.tweenParams;
-                }
-            };
-            Tweener.addTween(actor, actor.tweenParams);
-        } else {
-            actor.csEnable();
-            actor.set_width(actor.origWidth);
-            actor.set_opacity(255);
+        for (let i = 0; i < instances.length; i++) {
+            let actor = instances[i];
+
+            if (actor.hasOwnProperty('tweenParams')) {
+                Tweener.removeTweens(actor);
+                actor.tweenParams.onComplete.call(actor.tweenParams.onCompleteScope);
+            }
+
+            if (animate) {
+                actor.csEnable();
+                actor.tweenParams = {
+                    width:           actor.origWidth,
+                    opacity:         255,
+                    time:            this.animationDuration / 1000,
+                    transition:      'easeInOutQuart',
+                    onCompleteScope: actor,
+                    onComplete: function () {
+                        delete this.tweenParams;
+                    }
+                };
+                Tweener.addTween(actor, actor.tweenParams);
+            } else {
+                actor.csEnable();
+                actor.set_width(actor.origWidth);
+                actor.set_opacity(255);
+            }
         }
     },
 
@@ -491,7 +518,7 @@ CollapsibleSystrayApplet.prototype = {
         global.log("[" + uuid + "] Event: _removeIndicatorSupport");
 
         this._shellIndicators.forEach(function(iconActor) {
-            this._unregisterAppIcon(iconActor._indicator.id);
+            this._unregisterAppIcon(iconActor._indicator.id, iconActor);
         });
 
         CinnamonSystray.MyApplet.prototype._removeIndicatorSupport.call(this);
@@ -523,7 +550,7 @@ CollapsibleSystrayApplet.prototype = {
 
         let children = this.manager_container.get_children();
         for (var i = 0; i < children.length; i++) {
-            this._unregisterAppIcon(children[i].role);
+            this._unregisterAppIcon(children[i].role, children[i]);
         }
 
         CinnamonSystray.MyApplet.prototype._onBeforeRedisplay.call(this);
@@ -535,7 +562,7 @@ CollapsibleSystrayApplet.prototype = {
     _onTrayIconRemoved: function(o, icon) {
         global.log("[" + uuid + "] Event: _onTrayIconRemoved - " + icon.role);
 
-        this._unregisterAppIcon(icon.role);
+        this._unregisterAppIcon(icon.role, icon.wrapper);
 
         icon.wrapper.destroy();
 
@@ -640,11 +667,9 @@ CollapsibleSystrayApplet.prototype = {
     _onIndicatorRemoved: function(manager, appIndicator) {
         global.log("[" + uuid + "] Event: _onIndicatorRemoved - " + appIndicator.id);
 
-        let id = appIndicator.id;
+        this._unregisterAppIcon(appIndicator.id, this._shellIndicators[appIndicator.id]);
 
         CinnamonSystray.MyApplet.prototype._onIndicatorRemoved.call(this, manager, appIndicator);
-
-        this._unregisterAppIcon(id);
     },
 
     /*
