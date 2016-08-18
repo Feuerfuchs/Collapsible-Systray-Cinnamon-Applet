@@ -178,6 +178,8 @@ CollapsibleSystrayApplet.prototype = {
             }
         }
 
+        global.log("[" + uuid + "] Register instance of " + id);
+
         actor.origWidth = actor.get_width();
 
         instanceArray.push(actor);
@@ -197,12 +199,16 @@ CollapsibleSystrayApplet.prototype = {
      * Remove the icon from the list and move the menu entry to the list of inactive applications
      */
     _unregisterAppIcon: function(id, actor) {
+        global.log("[" + uuid + "] Unregister instance of " + id);
+
         let instanceArray = this.registeredAppIcons[id];
         let iconIndex     = instanceArray.indexOf(actor);
         if (iconIndex != -1) {
             instanceArray.splice(iconIndex, 1);
         }
         if (instanceArray.length == 0) {
+            global.log("[" + uuid + "] No more instances left");
+
             delete instanceArray;
             delete this.registeredAppIcons[id];
             this._addApplicationMenuItem(id, this.Menu.INACTIVE_APPLICATIONS);
@@ -229,9 +235,12 @@ CollapsibleSystrayApplet.prototype = {
             return;
         }
 
+        global.log("[" + uuid + "] Insert menu item for " + id + " in " + (activeMenu == this.Menu.ACTIVE_APPLICATIONS ? "active" : "inactive") + " applications");
+
         switch (activeMenu) {
             case this.Menu.ACTIVE_APPLICATIONS:
                 menuItem = new PopupMenu.PopupSwitchMenuItem(id, this.iconVisibilityList[id]);
+                menuItem.appID = id;
                 menuItem.connect('toggled', Lang.bind(this, function(o, state) {
                     this._updateAppIconVisibility(id, state);
 
@@ -244,6 +253,7 @@ CollapsibleSystrayApplet.prototype = {
             default:
             case this.Menu.INACTIVE_APPLICATIONS:
                 menuItem = new CSRemovableSwitchMenuItem.CSRemovableSwitchMenuItem(id, this.iconVisibilityList[id]);
+                menuItem.appID = id;
                 menuItem.connect('toggled', Lang.bind(this, function(o, state) {
                     this._updateAppIconVisibility(id, state);
                 }));
@@ -257,7 +267,16 @@ CollapsibleSystrayApplet.prototype = {
                 break;
         }
 
-        curMenu.addMenuItem(menuItem);
+        // Find insertion index so all menu items are alphabetically sorted
+        let index = 0;
+        let items = curMenu._getMenuItems();
+        for (; index < items.length; index++) {
+            if (items[index].appID.localeCompare(id) >= 1) {
+                break;
+            }
+        }
+
+        curMenu.addMenuItem(menuItem, index);
         curMenuItems[id] = menuItem;
     },
 
@@ -607,16 +626,21 @@ CollapsibleSystrayApplet.prototype = {
         let iconWrapContent = new St.Bin({ child: icon });
         iconWrap.add_style_class_name('ff-collapsible-systray__status-icon');
         iconWrap.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
-        iconWrap.add(iconWrapContent, { a_align: St.Align.MIDDLE, y_fill: false });
+        iconWrap.add_actor(iconWrapContent, { a_align: St.Align.MIDDLE, y_fill: false });
+        iconWrap.hiddenArea    = new St.BoxLayout();
         iconWrap.role          = role;
         iconWrap._rolePosition = icon._rolePosition;
         icon.wrapper           = iconWrap;
         icon.role              = role;
         iconWrap.csDisable = function() {
-            iconWrapContent.set_child(null);
+            //iconWrapContent.set_child(null);
+            iconWrap.remove_actor(iconWrapContent);
+            iconWrap.hiddenArea.add_actor(iconWrapContent);
         }
         iconWrap.csEnable = function() {
-            iconWrapContent.set_child(icon);
+            //iconWrapContent.set_child(icon);
+            iconWrap.hiddenArea.remove_actor(iconWrapContent);
+            iconWrap.add_actor(iconWrapContent);
         }
 
         this.manager_container.insert_child_at_index(iconWrap, index);
