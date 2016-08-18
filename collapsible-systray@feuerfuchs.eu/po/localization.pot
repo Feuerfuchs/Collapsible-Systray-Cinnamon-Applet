@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 17:38+0200\n"
+"POT-Creation-Date: 2016-08-18 11:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: applet.js:109
+#: applet.js:112
 msgid "Active applications"
 msgstr ""
 
-#: applet.js:110
+#: applet.js:113
 msgid "Inactive applications"
 msgstr ""
 
@@ -63,6 +63,13 @@ msgstr ""
 msgid "Expand icon: "
 msgstr ""
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-icon-
+#. name->tooltip
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-icon-
+#. name->tooltip
+msgid "Enter either the icon's qualified name or it's full path"
+msgstr ""
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-icon-
 #. name->description
 msgid "Collapse icon: "
@@ -85,12 +92,19 @@ msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->dont-move-visible-
 #. icons->description
-msgid "Don't move visible icons on expand/collapse"
+msgid "Avoid moving active icons on expand/collapse"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
 #. icons->description
 msgid "Disable hover effect for tray icons"
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
+#. icons->tooltip
+msgid ""
+"If you have problems with the hover effect or it simply doesn't look good, "
+"you should enable this setting"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->appearance-
@@ -100,7 +114,12 @@ msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-
 #. delay->description
-msgid "Delay until initial collapse: "
+msgid "Startup collapse delay: "
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-
+#. delay->tooltip
+msgid "The delay until the applet automatically collapses upon startup"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-delay->units

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: collapsible-systray@feuerfuchs.eu 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-17 17:38+0200\n"
-"PO-Revision-Date: 2016-08-17 20:31+0200\n"
+"POT-Creation-Date: 2016-08-18 11:10+0200\n"
+"PO-Revision-Date: 2016-08-18 11:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: Feuerfuchs\n"
 "Language: de\n"
@@ -18,11 +18,11 @@ msgstr ""
 "X-Generator: Poedit 1.8.8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: applet.js:109
+#: applet.js:112
 msgid "Active applications"
 msgstr "Aktive Anwendungen"
 
-#: applet.js:110
+#: applet.js:113
 msgid "Inactive applications"
 msgstr "Inaktive Anwendungen"
 
@@ -32,7 +32,8 @@ msgstr "Collapsible Systray"
 
 #. collapsible-systray@feuerfuchs.eu->metadata.json->description
 msgid "A replacement for the abandoned System Tray Collapsible Cinnamon applet"
-msgstr "Ein Nachfolger für das populäre System Tray Collapsible Cinnamon-Applet"
+msgstr ""
+"Ein Nachfolger für das populäre System Tray Collapsible Cinnamon-Applet"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-on-
 #. hover->description
@@ -63,6 +64,13 @@ msgstr "Beim Verlassen verkleinern - Verzögerung: "
 msgid "Expand icon: "
 msgstr "Erweitern-Icon: "
 
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-icon-
+#. name->tooltip
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-icon-
+#. name->tooltip
+msgid "Enter either the icon's qualified name or it's full path"
+msgstr "Gib entweder den Namen des Symbols oder den kompletten Pfad an"
+
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-icon-
 #. name->description
 msgid "Collapse icon: "
@@ -85,13 +93,22 @@ msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->dont-move-visible-
 #. icons->description
-msgid "Don't move visible icons on expand/collapse"
-msgstr "Symbole beim Erweitern/Verkleinern nicht bewegen"
+msgid "Avoid moving active icons on expand/collapse"
+msgstr "Vermeide das bewegen von Symbolen beim erweitern/verkleinern"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
 #. icons->description
 msgid "Disable hover effect for tray icons"
 msgstr "Hover-Effekt für Tray-icons deaktivieren"
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
+#. icons->tooltip
+msgid ""
+"If you have problems with the hover effect or it simply doesn't look good, "
+"you should enable this setting"
+msgstr ""
+"Falls der Hover-Effekt nicht richtig funktioniert oder blöd aussieht "
+"solltest du diese Einstellung aktivieren"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->appearance-
 #. header->description
@@ -100,8 +117,14 @@ msgstr "Aussehen"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-
 #. delay->description
-msgid "Delay until initial collapse: "
-msgstr "Verzögerung der Anfangsanimation: "
+msgid "Startup collapse delay: "
+msgstr "Verkleinern beim Start - Verzögerung: "
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-
+#. delay->tooltip
+msgid "The delay until the applet automatically collapses upon startup"
+msgstr ""
+"Die Verzögerung, bis das Applet sich automatisch beim Start verkleinert"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->init-delay->units
 msgid "seconds"
@@ -121,6 +144,12 @@ msgstr "Beim Verlassen verkleinern"
 #. header->description
 msgid "Behavior"
 msgstr "Verhalten"
+
+#~ msgid "Don't move visible icons on expand/collapse"
+#~ msgstr "Symbole beim Erweitern/Verkleinern nicht bewegen"
+
+#~ msgid "Delay until initial collapse: "
+#~ msgstr "Verzögerung der Anfangsanimation: "
 
 #~ msgid "Don't move visible icons on collapse"
 #~ msgstr "Symbole beim verkleinern/erweitern nicht bewegen"

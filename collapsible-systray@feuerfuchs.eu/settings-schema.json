@@ -55,7 +55,8 @@
         "max":         30,
         "step":        1,
         "units":       "seconds",
-        "description": "Delay until initial collapse: "
+        "description": "Startup collapse delay: ",
+        "tooltip" :    "The delay until the applet automatically collapses upon startup"
     },
 
     "sep-1": {
@@ -70,25 +71,28 @@
     "no-hover-for-tray-icons": {
         "type":        "checkbox",
         "default":     false,
-        "description": "Disable hover effect for tray icons"
+        "description": "Disable hover effect for tray icons",
+        "tooltip" :    "If you have problems with the hover effect or it simply doesn't look good, you should enable this setting"
     },
 
     "dont-move-visible-icons": {
         "type":        "checkbox",
         "default":     false,
-        "description": "Don't move visible icons on expand/collapse"
+        "description": "Avoid moving active icons on expand/collapse"
     },
 
     "expand-icon-name": {
         "type":         "iconfilechooser",
         "default" :     "pan-start",
-        "description" : "Expand icon: "
+        "description" : "Expand icon: ",
+        "tooltip" :     "Enter either the icon's qualified name or it's full path"
     },
 
     "collapse-icon-name": {
         "type":         "iconfilechooser",
         "default" :     "pan-end",
-        "description" : "Collapse icon: "
+        "description" : "Collapse icon: ",
+        "tooltip" :     "Enter either the icon's qualified name or it's full path"
     },
 
     "tray-icon-hpadding": {
