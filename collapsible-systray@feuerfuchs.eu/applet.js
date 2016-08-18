@@ -449,8 +449,6 @@ CollapsibleSystrayApplet.prototype = {
             this.initialCollapseTimerID = null;
         }
 
-        if (!this.iconsAreHidden) return;
-
         this.hoverTimerID = Mainloop.timeout_add(this.expandOnHoverDelay, Lang.bind(this, function() {
             this.hoverTimerID = null;
 
@@ -475,8 +473,6 @@ CollapsibleSystrayApplet.prototype = {
             Mainloop.source_remove(this.initialCollapseTimerID);
             this.initialCollapseTimerID = null;
         }
-
-        if (this.iconsAreHidden) return;
 
         this.hoverTimerID = Mainloop.timeout_add(this.collapseOnLeaveDelay, Lang.bind(this, function() {
             this.hoverTimerID = null;
