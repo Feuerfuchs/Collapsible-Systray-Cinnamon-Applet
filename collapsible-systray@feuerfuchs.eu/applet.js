@@ -298,7 +298,7 @@ CollapsibleSystrayApplet.prototype = {
 
             if (animate) {
                 actor.tweenParams = {
-                    width:           0,
+                    width:           0.1,
                     opacity:         0,
                     time:            this.animationDuration / 1000,
                     transition:      'easeInOutQuart',
@@ -310,7 +310,7 @@ CollapsibleSystrayApplet.prototype = {
                 };
                 Tweener.addTween(actor, actor.tweenParams);
             } else {
-                actor.set_width(0);
+                actor.set_width(0.1);
                 actor.set_opacity(0);
                 actor.csDisable();
             }
@@ -371,12 +371,13 @@ CollapsibleSystrayApplet.prototype = {
                     onCompleteScope: actor,
                     onComplete: function () {
                         delete this.tweenParams;
+                        actor.csEnableAfter();
                     }
                 };
                 Tweener.addTween(actor, actor.tweenParams);
             } else {
                 actor.csEnable();
-                actor.set_width(actor.origWidth);
+                actor.set_width(-1);
                 actor.set_opacity(255);
             }
         }
@@ -603,22 +604,15 @@ CollapsibleSystrayApplet.prototype = {
 
         let index = 0;
         if (!this.dontMoveVisibleIcons) {
-            let children = this.manager_container.get_children();
-            for (let i = children.length - 1; i >= 0; i--) {
-                let child = children[i];
-                if (child === icon) {
-                    index = i;
-                    break;
-                }
-            }
+            index = this.manager_container.get_children().indexOf(icon);
 
             this.manager_container.remove_child(icon);
         } else {
             this.manager_container.remove_child(icon);
 
             if (!this.iconVisibilityList.hasOwnProperty(role) || this.iconVisibilityList[role]) {
-                let children = this.manager_container.get_children();
-                index = children.length;
+                // Icon is always visible; put it on the right end
+                index = this.manager_container.get_children().length;
             }
         }
 
@@ -627,20 +621,45 @@ CollapsibleSystrayApplet.prototype = {
         iconWrap.add_style_class_name('ff-collapsible-systray__status-icon');
         iconWrap.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
         iconWrap.add_actor(iconWrapContent, { a_align: St.Align.MIDDLE, y_fill: false });
-        iconWrap.hiddenArea    = new St.BoxLayout();
         iconWrap.role          = role;
         iconWrap._rolePosition = icon._rolePosition;
         icon.wrapper           = iconWrap;
         icon.role              = role;
-        iconWrap.csDisable = function() {
-            //iconWrapContent.set_child(null);
-            iconWrap.remove_actor(iconWrapContent);
-            iconWrap.hiddenArea.add_actor(iconWrapContent);
+
+        //
+        // Icon deactivation/reactivation methods
+
+        // 1: Remove/add icon actor from wrapper
+        if (["chromium"].indexOf(role) != -1) {
+            iconWrap.csDisable = function() {
+                iconWrapContent.set_child(null);
+            }
+            iconWrap.csEnable = function() {
+                iconWrapContent.set_child(icon);
+            }
+            iconWrap.csEnableAfter = function() {
+                //icon.window.realize();
+            }
         }
-        iconWrap.csEnable = function() {
-            //iconWrapContent.set_child(icon);
-            iconWrap.hiddenArea.remove_actor(iconWrapContent);
-            iconWrap.add_actor(iconWrapContent);
+        // 2: Hide the associated CinnamonEmbeddedWindow on collapse and un-hide it once the expand animation is finished
+        else if (["pidgin"].indexOf(role) != -1) {
+            iconWrap.csDisable = function() {
+                icon.window.hide();
+            }
+            iconWrap.csEnable = function() { }
+            iconWrap.csEnableAfter = function() {
+                icon.window.show_all();
+            }
+        }
+        // 3: Hide/un-hide the associated CinnamonEmbeddedWindow on collapse/expand
+        else {
+            iconWrap.csDisable = function() {
+                icon.window.hide();
+            }
+            iconWrap.csEnable = function() {
+                icon.window.show_all();
+            }
+            iconWrap.csEnableAfter = function() { }
         }
 
         this.manager_container.insert_child_at_index(iconWrap, index);
@@ -667,8 +686,8 @@ CollapsibleSystrayApplet.prototype = {
                 let index = 0;
 
                 if (!this.iconVisibilityList.hasOwnProperty(appIndicator.id) || this.iconVisibilityList[appIndicator.id]) {
-                    let children = this.indicatorContainer.get_children();
-                    index = children.length;
+                    // Icon is always visible; put it on the right end
+                    index = this.indicatorContainer.get_children().length;
                 }
 
                 this.indicatorContainer.insert_child_at_index(iconActor.actor, index);
@@ -679,6 +698,9 @@ CollapsibleSystrayApplet.prototype = {
             }
             iconActor.actor.csEnable = function() {
                 iconActor.actor.set_reactive(true);
+            }
+            iconActor.actor.csEnableAfter = function() {
+
             }
 
             this._registerAppIcon(appIndicator.id, iconActor.actor);
