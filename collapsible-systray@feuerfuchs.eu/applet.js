@@ -637,9 +637,7 @@ CollapsibleSystrayApplet.prototype = {
             iconWrap.csEnable = function() {
                 iconWrapContent.set_child(icon);
             }
-            iconWrap.csEnableAfter = function() {
-                //icon.window.realize();
-            }
+            iconWrap.csEnableAfter = function() { }
         }
         // 2: Hide the associated CinnamonEmbeddedWindow on collapse and un-hide it once the expand animation is finished
         else if (["pidgin"].indexOf(role) != -1) {
