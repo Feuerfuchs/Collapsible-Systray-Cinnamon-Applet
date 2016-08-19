@@ -481,7 +481,6 @@ CollapsibleSystrayApplet.prototype = {
                 icon.set_width(icon.origWidth);
             }
         }
-        this.manager_container.queue_relayout();
     },
 
     /*
