@@ -172,10 +172,8 @@ CollapsibleSystrayApplet.prototype = {
 
         let instanceArray = this.registeredAppIcons[id];
 
-        for (let i = 0; i < instanceArray.length; i++) {
-            if (instanceArray.indexOf(actor) != -1) {
-                return;
-            }
+        if (instanceArray.indexOf(actor) != -1) {
+            return;
         }
 
         global.log("[" + uuid + "] Register instance of " + id);
@@ -288,7 +286,7 @@ CollapsibleSystrayApplet.prototype = {
 
         global.log("[" + uuid + "] Hiding icon " + id + " - instances: " + instances.length);
 
-        for (let i = 0; i < instances.length; i++) {
+        for (let i = instances.length - 1; i >= 0; --i) {
             let actor = instances[i];
 
             if (actor.hasOwnProperty('tweenParams')) {
@@ -353,7 +351,7 @@ CollapsibleSystrayApplet.prototype = {
 
         global.log("[" + uuid + "] Showing icon " + id + " - instances: " + instances.length);
 
-        for (let i = 0; i < instances.length; i++) {
+        for (let i = instances.length - 1; i >= 0; --i) {
             let actor = instances[i];
 
             if (actor.hasOwnProperty('tweenParams')) {
@@ -434,6 +432,59 @@ CollapsibleSystrayApplet.prototype = {
     },
 
     /*
+     * Rearrange icons if the 'Avoid moving active icons on expand/collapse' setting is active
+     */
+    _updateIconOrder: function() {
+        if (this.dontMoveVisibleIcons) {
+            let trayIcons_ = this.manager_container.get_children();
+            let trayIcons  = [];
+
+            for (let i = trayIcons_.length - 1; i >= 0; --i) {
+                trayIcons.push(trayIcons_[i]);
+            }
+            for (let i = trayIcons.length - 1; i >= 0; --i) {
+                let icon = trayIcons[i];
+                if (!this.iconVisibilityList[icon.role]) {
+                    this.manager_container.set_child_at_index(icon, 0);
+                }
+            }
+
+            let indicators_ = this.indicatorContainer.get_children();
+            let indicators  = [];
+
+            for (let i = indicators_.length - 1; i >= 0; --i) {
+                indicators.push(indicators_[i]);
+            }
+            for (let i = indicators.length - 1; i >= 0; --i) {
+                let icon = indicators[i];
+                if (!this.iconVisibilityList[icon.appID]) {
+                    this.manager_container.set_child_at_index(icon, 0);
+                }
+            }
+        }
+    },
+
+    /*
+     * Update the tray icons' padding
+     */
+    _updateTrayIconPadding: function() {
+        let trayIcons = this.manager_container.get_children();
+        for (let i = trayIcons.length - 1; i >= 0; --i) {
+            let icon = trayIcons[i];
+
+            icon.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
+            let padDiff = this.trayIconHPadding - icon.origPadding;
+            icon.origWidth  += padDiff * 2;
+            icon.origPadding = this.trayIconHPadding;
+
+            if (!this.iconsAreHidden || this.iconVisibilityList[icon.role]) {
+                icon.set_width(icon.origWidth);
+            }
+        }
+        this.manager_container.queue_relayout();
+    },
+
+    /*
      * Load the list of hidden icons from the settings
      */
     _loadAppIconVisibilityList: function() {
@@ -464,9 +515,8 @@ CollapsibleSystrayApplet.prototype = {
      */
     _onVisualSettingsUpdated: function() {
         this.collapseBtn.setIsExpanded(!this.iconsAreHidden);
-        Main.statusIconDispatcher.redisplay();
-        this._removeIndicatorSupport();
-        this._addIndicatorSupport();
+        this._updateIconOrder();
+        this._updateTrayIconPadding();
     },
 
     /*
@@ -621,6 +671,7 @@ CollapsibleSystrayApplet.prototype = {
         iconWrap.add_style_class_name('ff-collapsible-systray__status-icon');
         iconWrap.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
         iconWrap.add_actor(iconWrapContent, { a_align: St.Align.MIDDLE, y_fill: false });
+        iconWrap.origPadding   = this.trayIconHPadding;
         iconWrap.role          = role;
         iconWrap._rolePosition = icon._rolePosition;
         icon.wrapper           = iconWrap;
@@ -629,8 +680,8 @@ CollapsibleSystrayApplet.prototype = {
         //
         // Icon deactivation/reactivation methods
 
-        // 1: Remove/add icon actor from wrapper
-        if (["chromium"].indexOf(role) != -1) {
+        // 1: Remove/add icon actor from wrapper (recommended for non-updating icons)
+        if (["chromium", "livestreamer-twitch-gui", "swt"].indexOf(role) != -1) {
             iconWrap.csDisable = function() {
                 iconWrapContent.set_child(null);
             }
@@ -691,6 +742,7 @@ CollapsibleSystrayApplet.prototype = {
                 this.indicatorContainer.insert_child_at_index(iconActor.actor, index);
             }
 
+            iconActor.actor.appID = appIndicator.id;
             iconActor.actor.csDisable = function() {
                 iconActor.actor.set_reactive(false);
             }
