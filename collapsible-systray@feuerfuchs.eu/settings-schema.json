@@ -75,12 +75,6 @@
         "tooltip" :    "If you have problems with the hover effect or it simply doesn't look good, you should enable this setting"
     },
 
-    "dont-move-visible-icons": {
-        "type":        "checkbox",
-        "default":     false,
-        "description": "Avoid moving active icons on expand/collapse"
-    },
-
     "expand-icon-name": {
         "type":         "iconfilechooser",
         "default" :     "pan-start",
