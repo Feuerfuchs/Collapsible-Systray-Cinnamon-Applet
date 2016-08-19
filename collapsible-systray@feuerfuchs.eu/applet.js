@@ -117,14 +117,13 @@ CollapsibleSystrayApplet.prototype = {
         this.settings.bindProperty(Settings.BindingDirection.IN,            "animation-duration",      "animationDuration",       this._onSettingsUpdated,         "animationDuration");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "expand-icon-name",        "expandIconName",          this._onSettingsUpdated,         "expandIconName");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "collapse-icon-name",      "collapseIconName",        this._onSettingsUpdated,         "collapseIconName");
-        this.settings.bindProperty(Settings.BindingDirection.IN,            "tray-icon-hpadding",      "trayIconHPadding",        this._updateTrayIconPadding,     null);
+        this.settings.bindProperty(Settings.BindingDirection.IN,            "tray-icon-hpadding",      "trayIconHPadding",        this._onSettingsUpdated,         "trayIconHPadding");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "expand-on-hover",         "expandOnHover",           this._onSettingsUpdated,         "expandOnHover");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "expand-on-hover-delay",   "expandOnHoverDelay",      this._onSettingsUpdated,         "expandOnHoverDelay");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "collapse-on-leave",       "collapseOnLeave",         this._onSettingsUpdated,         "collapseOnLeave");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "collapse-on-leave-delay", "collapseOnLeaveDelay",    this._onSettingsUpdated,         "collapseOnLeaveDelay");
         this.settings.bindProperty(Settings.BindingDirection.IN,            "no-hover-for-tray-icons", "noHoverForTrayIcons",     this._onSettingsUpdated,         "noHoverForTrayIcons");
         this._loadAppIconVisibilityList();
-        this._onSettingsUpdated();
         this.collapseBtn.setIsExpanded(!this.iconsAreHidden);
 
         //
@@ -183,8 +182,9 @@ CollapsibleSystrayApplet.prototype = {
 
         let [minWidth, natWidth] = actor.get_preferred_width(-1);
 
-        actor.iconID    = id;
-        actor.origWidth = natWidth;
+        actor.iconID      = id;
+        actor.origWidth   = natWidth;
+        actor.origPadding = this.trayIconHPadding;
 
         if (this.iconsAreHidden && !this.iconVisibilityList[id]) {
             actor.csDisable();
@@ -421,6 +421,10 @@ CollapsibleSystrayApplet.prototype = {
 
             if (!icon.isIndicator) {
                 icon.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
+
+                let padDiff = this.trayIconHPadding - icon.origPadding;
+                icon.origWidth  += padDiff * 2;
+                icon.origPadding = this.trayIconHPadding;
             }
         }
 
@@ -430,6 +434,10 @@ CollapsibleSystrayApplet.prototype = {
 
             if (!icon.isIndicator) {
                 icon.set_style('padding-left: ' + this.trayIconHPadding + 'px; padding-right: ' + this.trayIconHPadding + 'px;');
+
+                let padDiff = this.trayIconHPadding - icon.origPadding;
+                icon.origWidth  += padDiff * 2;
+                icon.origPadding = this.trayIconHPadding;
             }
         }
     },
@@ -578,7 +586,6 @@ CollapsibleSystrayApplet.prototype = {
 
             if (!icon.isIndicator) {
                 this._unregisterAppIcon(icon.iconID, icon);
-                icon.destroy();
             }
         }
 
@@ -588,7 +595,6 @@ CollapsibleSystrayApplet.prototype = {
 
             if (!icon.isIndicator) {
                 this._unregisterAppIcon(icon.iconID, icon);
-                icon.destroy();
             }
         }
 
