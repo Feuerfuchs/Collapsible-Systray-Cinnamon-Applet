@@ -85,15 +85,29 @@ CollapsibleSystrayApplet.prototype = {
         this.iconsAreHidden     = false;
 
         //
-        // Applet layout
-
         // Root container
+
         this.mainLayout = new St.BoxLayout({ vertical: false });
 
-        // Containers for shown/hidden icons
+        //
+        // Container for hidden icons
+
         this.hiddenIconsContainer = new St.BoxLayout({ vertical: false });
-        this.hiddenIconsContainer.set_clip_to_allocation(true);
+
+        // Add horizontal scrolling and scroll to the end on each redraw so that it looks like the
+        // collapse button "eats" the icons on collapse
+        this.hiddenIconsContainer.hadjustment = new St.Adjustment();
+        this.hiddenIconsContainer.connect('queue-redraw', Lang.bind(this, function() {
+            this.hiddenIconsContainer.hadjustment.set_value(this.hiddenIconsContainer.hadjustment.upper);
+        }));
+
+        //
+        // Container for shown icons
+
         this.shownIconsContainer = new St.BoxLayout({ vertical: false });
+
+        //
+        // Assemble layout
 
         this.mainLayout.add_actor(this.collapseBtn.actor);
         this.mainLayout.add_actor(this.hiddenIconsContainer);
@@ -185,6 +199,7 @@ CollapsibleSystrayApplet.prototype = {
         actor.iconID      = id;
         actor.origWidth   = natWidth;
         actor.origPadding = this.trayIconHPadding;
+        actor.set_pivot_point(0.5, 0.5);
 
         if (this.iconsAreHidden && !this.iconVisibilityList[id]) {
             actor.csDisable();
@@ -310,6 +325,7 @@ CollapsibleSystrayApplet.prototype = {
                 width:      0,
                 time:       this.animationDuration / 1000,
                 transition: 'easeInOutQuart',
+                rounded:    true,
                 onComplete: onFinished
             }
 
@@ -596,6 +612,11 @@ CollapsibleSystrayApplet.prototype = {
             if (!icon.isIndicator) {
                 this._unregisterAppIcon(icon.iconID, icon);
             }
+        }
+
+        if (this.initialCollapseTimerID) {
+            Mainloop.source_remove(this.initialCollapseTimerID);
+            this.initialCollapseTimerID = null;
         }
 
         this.initialCollapseTimerID = Mainloop.timeout_add(this.initDelay * 1000, Lang.bind(this, function() {
