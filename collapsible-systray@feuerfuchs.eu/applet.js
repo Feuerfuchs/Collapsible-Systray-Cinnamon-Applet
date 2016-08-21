@@ -220,6 +220,7 @@ CollapsibleSystrayApplet.prototype = {
 
         if (!this.iconVisibilityList.hasOwnProperty(id)) {
             this.iconVisibilityList[id] = true;
+            this._saveAppIconVisibilityList();
         }
 
         if (this.iconVisibilityList[id]) {
