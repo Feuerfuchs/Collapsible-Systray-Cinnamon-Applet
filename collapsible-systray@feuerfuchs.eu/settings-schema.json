@@ -75,28 +75,28 @@
         "tooltip" :    "If you have problems with the hover effect or it simply doesn't look good, you should enable this setting"
     },
 
-    "expand-icon-name": {
+    "horizontal-expand-icon-name": {
         "type":         "iconfilechooser",
         "default" :     "pan-start",
-        "description" : "Expand icon: ",
+        "description" : "Horizontal expand icon: ",
         "tooltip" :     "Enter either the icon's qualified name or it's full path"
     },
 
-    "collapse-icon-name": {
+    "horizontal-collapse-icon-name": {
         "type":         "iconfilechooser",
         "default" :     "pan-end",
-        "description" : "Collapse icon: ",
+        "description" : "Horizontal collapse icon: ",
         "tooltip" :     "Enter either the icon's qualified name or it's full path"
     },
 
-    "tray-icon-hpadding": {
+    "tray-icon-padding": {
         "type":        "spinbutton",
         "default":     5,
         "min":         0,
         "max":         20,
         "step":        1,
         "units":       "px",
-        "description": "Horizontal padding of tray icons: "
+        "description": "Padding of tray icons: "
     },
 
     "icon-visibility-list": {

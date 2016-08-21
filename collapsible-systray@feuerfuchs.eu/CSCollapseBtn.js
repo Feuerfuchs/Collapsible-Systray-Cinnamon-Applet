@@ -30,10 +30,7 @@ CSCollapseBtn.prototype = {
     setIcon: function(name) {
         this.icon.set_icon_name(name);
         this.icon.set_icon_type(St.IconType.SYMBOLIC);
-        this.icon.set_icon_size(this.applet._scaleMode
-            ? (this.applet._panelHeight / DEFAULT_PANEL_HEIGHT) * PANEL_SYMBOLIC_ICON_DEFAULT_HEIGHT / global.ui_scale
-            : -1);
-        this.icon.set_style_class_name('system-status-icon');
+        this._setStyle();
     },
 
     /*
@@ -43,20 +40,27 @@ CSCollapseBtn.prototype = {
         try {
             this.icon.set_gicon(new Gio.FileIcon({ file: iconFile }));
             this.icon.set_icon_type(St.IconType.SYMBOLIC);
-            this.icon.set_icon_size(this.applet._scaleMode
-                ? (this.applet._panelHeight / DEFAULT_PANEL_HEIGHT) * PANEL_SYMBOLIC_ICON_DEFAULT_HEIGHT / global.ui_scale
-                : -1);
-            this.icon.set_style_class_name('system-status-icon');
+            this._setStyle();
         } catch (e) {
             global.log(e);
         }
     },
 
     /*
+     *
+     */
+    _setStyle: function() {
+        let symb_scaleup = ((this.applet._panelHeight / DEFAULT_PANEL_HEIGHT) * PANEL_SYMBOLIC_ICON_DEFAULT_HEIGHT) / global.ui_scale;
+
+        this.icon.set_icon_size(this.applet._scaleMode ? symb_scaleup : -1);
+        this.icon.set_style_class_name('system-status-icon');
+    },
+
+    /*
      * Set expanded state and refresh the icon
      */
     setIsExpanded: function(state) {
-        let iconName = state ? this.applet.collapseIconName : this.applet.expandIconName;
+        let iconName = state ? this.applet.getCollapseIcon() : this.applet.getExpandIcon();
         if (!iconName) {
             return;
         }

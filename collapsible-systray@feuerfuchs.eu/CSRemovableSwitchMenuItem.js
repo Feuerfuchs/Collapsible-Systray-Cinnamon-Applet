@@ -1,5 +1,6 @@
 const Lang      = imports.lang;
 const St        = imports.gi.St;
+const Mainloop  = imports.mainloop;
 const PopupMenu = imports.ui.popupMenu;
 
 // ------------------------------------------------------------------------------------------------------
@@ -40,5 +41,6 @@ CSRemovableSwitchMenuItem.prototype = {
      */
     remove: function() {
         this.emit('remove');
+        this.destroy();
     }
 };
