@@ -12,10 +12,9 @@ This applet is a replacement for the popular but, sadly, abandonded [System Tray
   * **Startup collapse delay** — The tray collapses automatically when it is loaded. You can define a delay here during which all icons are visible.
 * **Appearance**
   * **Disable hover effect for tray icons** — If you have problems with the hover effect or it simply doesn't look good, you should enable this setting
-  * **Avoid moving active icons on expand/collapse** — If enabled, icons are grouped in such a way that expanding/collapsing the tray will not move the visible icons
-  * **Expand icon** — The icon used for the expand/collapse button if the tray is collapsed
-  * **Collapse icon** — The icon used for the expand/collapse button if the tray is expanded
-  * **Horizontal padding of tray icons** — Depending on the theme used the spacing between applets is different from the default tray icon spacing. You can adjust the tray icon spacing here.
+  * **Horizontal expand icon** — The icon used for the expand/collapse button if the tray is collapsed
+  * **Horizontal collapse icon** — The icon used for the expand/collapse button if the tray is expanded
+  * **Padding of tray icons** — Depending on the theme used the spacing between applets is different from the default tray icon spacing. You can adjust the tray icon spacing here.
 
 
 # Installation
