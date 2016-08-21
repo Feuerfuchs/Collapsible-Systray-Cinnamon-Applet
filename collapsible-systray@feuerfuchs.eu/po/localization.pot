@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 11:10+0200\n"
+"POT-Creation-Date: 2016-08-21 17:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: applet.js:112
+#: applet.js:126
 msgid "Active applications"
 msgstr ""
 
-#: applet.js:113
+#: applet.js:127
 msgid "Inactive applications"
 msgstr ""
 
@@ -58,21 +58,21 @@ msgstr ""
 msgid "Collapse on un-hover delay: "
 msgstr ""
 
-#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-icon-
-#. name->description
-msgid "Expand icon: "
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->horizontal-
+#. collapse-icon-name->description
+msgid "Horizontal collapse icon: "
 msgstr ""
 
-#. collapsible-systray@feuerfuchs.eu->settings-schema.json->expand-icon-
-#. name->tooltip
-#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-icon-
-#. name->tooltip
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->horizontal-
+#. collapse-icon-name->tooltip
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->horizontal-expand-
+#. icon-name->tooltip
 msgid "Enter either the icon's qualified name or it's full path"
 msgstr ""
 
-#. collapsible-systray@feuerfuchs.eu->settings-schema.json->collapse-icon-
-#. name->description
-msgid "Collapse icon: "
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->horizontal-expand-
+#. icon-name->description
+msgid "Horizontal expand icon: "
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->icon-visibility-
@@ -81,18 +81,13 @@ msgid "Internal use"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->tray-icon-
-#. hpadding->description
-msgid "Horizontal padding of tray icons: "
+#. padding->description
+msgid "Padding of tray icons: "
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->tray-icon-
-#. hpadding->units
+#. padding->units
 msgid "px"
-msgstr ""
-
-#. collapsible-systray@feuerfuchs.eu->settings-schema.json->dont-move-visible-
-#. icons->description
-msgid "Avoid moving active icons on expand/collapse"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->no-hover-for-tray-
