@@ -114,6 +114,7 @@ CollapsibleSystrayApplet.prototype = {
         this.mainLayout.add_actor(this.collapseBtn.actor);
         this.mainLayout.add_actor(this.hiddenIconsContainer);
         this.mainLayout.add_actor(this.shownIconsContainer);
+        this.mainLayout.set_child_above_sibling(this.shownIconsContainer, this.hiddenIconsContainer);
         this.actor.add_actor(this.mainLayout);
 
         //
@@ -468,7 +469,7 @@ CollapsibleSystrayApplet.prototype = {
                     break;
                 }
             }
-            
+
             for (let i = instances.length - 1; i >= 0; --i) {
                 let actor = instances[i];
                 actor.reparent(container);
