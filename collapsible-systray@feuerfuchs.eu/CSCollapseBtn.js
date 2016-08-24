@@ -14,10 +14,9 @@ function CSCollapseBtn(applet) {
 
 CSCollapseBtn.prototype = {
     _init: function(applet) {
-        this.applet  = applet;
+        this._applet = applet;
         this.actor   = new St.Button({ style_class: 'applet-box' });
         this.icon    = new St.Icon({ reactive: true, track_hover: true, style_class: 'applet-icon' });
-        this.applet  = applet;
 
         this.actor.set_child(this.icon);
 
@@ -50,9 +49,9 @@ CSCollapseBtn.prototype = {
      *
      */
     _setStyle: function() {
-        let symb_scaleup = ((this.applet._panelHeight / DEFAULT_PANEL_HEIGHT) * PANEL_SYMBOLIC_ICON_DEFAULT_HEIGHT) / global.ui_scale;
+        let symb_scaleup = ((this._applet._panelHeight / DEFAULT_PANEL_HEIGHT) * PANEL_SYMBOLIC_ICON_DEFAULT_HEIGHT) / global.ui_scale;
 
-        this.icon.set_icon_size(this.applet._scaleMode ? symb_scaleup : -1);
+        this.icon.set_icon_size(this._applet._scaleMode ? symb_scaleup : -1);
         this.icon.set_style_class_name('system-status-icon');
     },
 
@@ -60,7 +59,7 @@ CSCollapseBtn.prototype = {
      * Set expanded state and refresh the icon
      */
     setIsExpanded: function(state) {
-        let iconName = state ? this.applet.getCollapseIcon() : this.applet.getExpandIcon();
+        let iconName = state ? this._applet.collapseIcon : this._applet.expandIcon;
         if (!iconName) {
             return;
         }

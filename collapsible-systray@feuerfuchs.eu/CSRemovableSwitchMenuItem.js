@@ -15,7 +15,7 @@ CSRemovableSwitchMenuItem.prototype = {
     _init: function(text, active, params) {
         PopupMenu.PopupSwitchMenuItem.prototype._init.call(this, text, active, params);
 
-        let iconDelete = new St.Icon({
+        const iconDelete = new St.Icon({
             icon_name:   'edit-delete',
             icon_type:   St.IconType.SYMBOLIC,
             style_class: 'popup-menu-icon'
