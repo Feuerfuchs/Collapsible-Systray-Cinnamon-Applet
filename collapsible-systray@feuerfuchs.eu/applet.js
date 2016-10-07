@@ -247,7 +247,8 @@ CollapsibleSystrayApplet.prototype = {
             instanceArray.splice(iconIndex, 1);
         }
 
-        actor.destroy();
+        //actor.destroy();
+        actor.get_parent().remove_actor(actor);
 
         if (instanceArray.length == 0) {
             global.log("[" + uuid + "] No more instances left");
@@ -596,16 +597,6 @@ CollapsibleSystrayApplet.prototype = {
     // Overrides
     // ---------------------------------------------------------------------------------
 
-    _removeIndicatorSupport: function() {
-        global.log("[" + uuid + "] Event: _removeIndicatorSupport");
-
-        this._shellIndicators.forEach(function(iconActor) {
-            this._unregisterAppIcon(iconActor._indicator.id, iconActor);
-        });
-
-        CinnamonSystray.MyApplet.prototype._removeIndicatorSupport.call(this);
-    },
-
     /*
      * Disable the collapse/expand button if the panel is in edit mode so the user can
      * perform drag and drop on that button
@@ -634,11 +625,12 @@ CollapsibleSystrayApplet.prototype = {
 
         this._showAppIcons(false);
 
-        this.shownIconsContainer.get_children().concat(this.hiddenIconsContainer.get_children()).forEach(Lang.bind(this, function(icon, index) {
-            if (!icon.isIndicator) {
-                this._unregisterAppIcon(icon.appID, icon);
-            }
-        }));
+        this.shownIconsContainer.get_children()
+            .concat(this.hiddenIconsContainer.get_children())
+            .filter(function(iconWrapper) { return iconWrapper.isIndicator !== true; })
+            .forEach(Lang.bind(this, function(iconWrapper, index) {
+                iconWrapper.icon.destroy();
+            }));
 
         if (this._initialCollapseTimerID) {
             Mainloop.source_remove(this._initialCollapseTimerID);
@@ -652,17 +644,6 @@ CollapsibleSystrayApplet.prototype = {
                 this._hideAppIcons(true);
             }
         }));
-    },
-
-    /*
-     * A tray icon has been removed; unregister it and destroy the wrapper
-     */
-    _onTrayIconRemoved: function(o, icon) {
-        global.log("[" + uuid + "] Event: _onTrayIconRemoved - " + icon.wrapper.appID);
-
-        this._unregisterAppIcon(icon.wrapper.appID, icon.wrapper);
-
-        CinnamonSystray.MyApplet.prototype._onTrayIconRemoved.call(this, o, icon);
     },
 
     /*
@@ -719,6 +700,9 @@ CollapsibleSystrayApplet.prototype = {
         }
 
         icon.wrapper = iconWrap;
+        icon.connect('destroy', Lang.bind(this, function() {
+            this._unregisterAppIcon(role, iconWrap);
+        }));
 
         this._registerAppIcon(role, iconWrap);
     },
@@ -743,20 +727,12 @@ CollapsibleSystrayApplet.prototype = {
             iconActor.actor.csEnable = function() {
                 iconActor.actor.set_reactive(true);
             }
+            iconActor.actor.connect('destroy', Lang.bind(this, function() {
+                this._unregisterAppIcon(appIndicator.id, iconActor.actor);
+            }));
 
             this._registerAppIcon(appIndicator.id, iconActor.actor);
         }
-    },
-
-    /*
-     * An AppIndicator has been removed; unregister it
-     */
-    _onIndicatorRemoved: function(manager, appIndicator) {
-        global.log("[" + uuid + "] Event: _onIndicatorRemoved - " + appIndicator.id);
-
-        this._unregisterAppIcon(appIndicator.id, this._shellIndicators[appIndicator.id]);
-
-        CinnamonSystray.MyApplet.prototype._onIndicatorRemoved.call(this, manager, appIndicator);
     },
 
     /*
