@@ -68,6 +68,13 @@
         "description": "Appearance"
     },
 
+    "sort-icons": {
+        "type":        "checkbox",
+        "default":     true,
+        "description": "Sort icons by name",
+        "tooltip" :    "If unchecked, the order of the icons will be pretty much random"
+    },
+
     "no-hover-for-tray-icons": {
         "type":        "checkbox",
         "default":     false,

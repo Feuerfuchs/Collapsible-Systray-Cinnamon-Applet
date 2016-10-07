@@ -146,6 +146,7 @@ CollapsibleSystrayApplet.prototype = {
         this._settings.bindProperty(Settings.BindingDirection.IN,            "collapse-on-leave",             "collapseOnLeave",            this._onSettingsUpdated,         "collapseOnLeave");
         this._settings.bindProperty(Settings.BindingDirection.IN,            "collapse-on-leave-delay",       "collapseOnLeaveDelay",       this._onSettingsUpdated,         "collapseOnLeaveDelay");
         this._settings.bindProperty(Settings.BindingDirection.IN,            "no-hover-for-tray-icons",       "noHoverForTrayIcons",        this._onSettingsUpdated,         "noHoverForTrayIcons");
+        this._settings.bindProperty(Settings.BindingDirection.IN,            "sort-icons",                    "sortIcons",                  this._onSettingsUpdated,         "sortIcons");
         this._loadAppIconVisibilityList();
         this.collapseBtn.setIsExpanded(!this._iconsAreHidden);
 
@@ -211,10 +212,12 @@ CollapsibleSystrayApplet.prototype = {
 
         const container = this.iconVisibilityList[id] ? this.shownIconsContainer : this.hiddenIconsContainer;
         let   index     = 0;
-        const icons     = container.get_children();
-        for (let len = icons.length; index < len; ++index) {
-            if (icons[index].appID.localeCompare(id) >= 1) {
-                break;
+        if (this.sortIcons) {
+            const icons = container.get_children();
+            for (let len = icons.length; index < len; ++index) {
+                if (icons[index].appID.localeCompare(id) >= 1) {
+                    break;
+                }
             }
         }
         container.insert_actor(actor, index);
@@ -454,10 +457,13 @@ CollapsibleSystrayApplet.prototype = {
 
             const container = state ? this.shownIconsContainer : this.hiddenIconsContainer;
             let   index     = 0;
-            const icons     = container.get_children();
-            for (let len = icons.length; index < len; ++index) {
-                if (icons[index].appID.localeCompare(id) >= 1) {
-                    break;
+
+            if (this.sortIcons) {
+                const icons = container.get_children();
+                for (let len = icons.length; index < len; ++index) {
+                    if (icons[index].appID.localeCompare(id) >= 1) {
+                        break;
+                    }
                 }
             }
 
@@ -697,7 +703,6 @@ CollapsibleSystrayApplet.prototype = {
             iconWrap.csEnableAfter = function() { }
         }
 
-        icon.wrapper = iconWrap;
         icon.connect('destroy', Lang.bind(this, function() {
             this._unregisterAppIcon(role, iconWrap);
         }));
