@@ -4,7 +4,7 @@
     "max-instances": 1,
     "dangerous":     false,
     "uuid":          "collapsible-systray@feuerfuchs.eu",
-    "version":       "1.5",
+    "version":       "1.6",
     "last-edited":   "1475854288",
     "icon":          "indicator-applet",
     "name":          "Collapsible Systray"
