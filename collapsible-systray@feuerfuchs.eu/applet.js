@@ -222,10 +222,7 @@ CollapsibleSystrayApplet.prototype = {
         const [minWidth,  natWidth]  = actor.get_preferred_width(-1);
         const [minHeight, natHeight] = actor.get_preferred_height(-1);
 
-        actor.appID       = id;
-        actor.origWidth   = natWidth;
-        actor.origHeight  = natHeight;
-        actor.origPadding = this.trayIconPadding;
+        actor.appID = id;
         actor.set_pivot_point(0.5, 0.5);
 
         if (this._iconsAreHidden && !this.iconVisibilityList[id]) {
@@ -389,10 +386,9 @@ CollapsibleSystrayApplet.prototype = {
         const onFinished = Lang.bind(this, function() {
             delete this.hiddenIconsContainer.tweenParams;
 
-            let icons  = this.hiddenIconsContainer.get_children();
-            for (let i = icons.length - 1; i >= 0; --i) {
-                icons[i].csEnableAfter();
-            }
+            this.hiddenIconsContainer.get_children().forEach(function(icon, index) {
+                icon.csEnableAfter();
+            });
 
             this.hiddenIconsContainer.set_width(-1);
 
@@ -400,20 +396,12 @@ CollapsibleSystrayApplet.prototype = {
             this.collapseBtn.setIsExpanded(true);
         });
 
-        let icons  = this.hiddenIconsContainer.get_children();
-        for (let i = icons.length - 1; i >= 0; --i) {
-            icons[i].csEnable();
-        }
+        this.hiddenIconsContainer.get_children().forEach(function(icon, index) {
+            icon.csEnable();
+        });
 
         if (animate) {
             this._animating = true;
-
-            let width  = 0;
-            let height = 0;
-            this.hiddenIconsContainer.get_children().forEach(function(icon, index) {
-                width  += icon.origWidth;
-                height += icon.origHeight;
-            });
 
             this.hiddenIconsContainer.tweenParams = {
                 time:       this.animationDuration / 1000,
@@ -422,9 +410,23 @@ CollapsibleSystrayApplet.prototype = {
             };
 
             if (this._direction == this.Direction.HORIZONTAL) {
-                this.hiddenIconsContainer.tweenParams.width = width;
+                let [minWidth, natWidth] = this.hiddenIconsContainer.get_preferred_width(-1);
+                let prevWidth = natWidth;
+
+                this.hiddenIconsContainer.set_width(-1);
+                [minWidth, natWidth] = this.hiddenIconsContainer.get_preferred_width(-1);
+                this.hiddenIconsContainer.tweenParams.width = natWidth;
+
+                this.hiddenIconsContainer.set_width(prevWidth);
             } else {
-                this.hiddenIconsContainer.tweenParams.height = height;
+                let [minHeight, natHeight] = this.hiddenIconsContainer.get_preferred_height(-1);
+                let prevHeight = natHeight;
+
+                this.hiddenIconsContainer.set_height(-1);
+                [minHeight, natHeight] = this.hiddenIconsContainer.get_preferred_height(-1);
+                this.hiddenIconsContainer.tweenParams.height = natHeight;
+
+                this.hiddenIconsContainer.set_height(prevHeight);
             }
 
             Tweener.addTween(this.hiddenIconsContainer, this.hiddenIconsContainer.tweenParams);
@@ -481,20 +483,16 @@ CollapsibleSystrayApplet.prototype = {
      * Update the tray icons' padding
      */
     _updateTrayIconPadding: function() {
-        this.shownIconsContainer.get_children().concat(this.hiddenIconsContainer.get_children()).forEach(Lang.bind(this, function(icon, index) {
-            if (!icon.isIndicator) {
-                const padDiff = this.trayIconPadding - icon.origPadding;
-                icon.origPadding = this.trayIconPadding;
-
+        this.shownIconsContainer.get_children()
+            .concat(this.hiddenIconsContainer.get_children())
+            .filter(function(iconWrapper) { return iconWrapper.isIndicator != true; })
+            .forEach(Lang.bind(this, function(iconWrapper, index) {
                 if (this._direction == this.Direction.HORIZONTAL) {
-                    icon.set_style('padding-left: ' + this.trayIconPadding + 'px; padding-right: ' + this.trayIconPadding + 'px;');
-                    icon.origWidth += padDiff * 2;
+                    iconWrapper.set_style('padding-left: ' + this.trayIconPadding + 'px; padding-right: ' + this.trayIconPadding + 'px;');
                 } else {
-                    icon.set_style('padding-top: ' + this.trayIconPadding + 'px; padding-bottom: ' + this.trayIconPadding + 'px;');
-                    icon.origHeight += padDiff * 2;
+                    iconWrapper.set_style('padding-top: ' + this.trayIconPadding + 'px; padding-bottom: ' + this.trayIconPadding + 'px;');
                 }
-            }
-        }));
+            }));
     },
 
     /*
@@ -627,7 +625,7 @@ CollapsibleSystrayApplet.prototype = {
 
         this.shownIconsContainer.get_children()
             .concat(this.hiddenIconsContainer.get_children())
-            .filter(function(iconWrapper) { return iconWrapper.isIndicator !== true; })
+            .filter(function(iconWrapper) { return iconWrapper.isIndicator != true; })
             .forEach(Lang.bind(this, function(iconWrapper, index) {
                 iconWrapper.icon.destroy();
             }));
