@@ -226,7 +226,6 @@ CollapsibleSystrayApplet.prototype = {
         const [minHeight, natHeight] = actor.get_preferred_height(-1);
 
         actor.appID = id;
-        actor.set_pivot_point(0.5, 0.5);
 
         if (this._iconsAreHidden && !this.iconVisibilityList[id]) {
             actor.csDisable();
@@ -263,9 +262,9 @@ CollapsibleSystrayApplet.prototype = {
      * Create a menu entry for the specified icon in the "active applications" section
      */
     _addApplicationMenuItem: function(id, menu) {
-        const curMenuItems   = menu == this.Menu.ACTIVE_APPLICATIONS ? this._activeMenuItems        : this._inactiveMenuItems;
+        const curMenuItems   = menu == this.Menu.ACTIVE_APPLICATIONS ? this._activeMenuItems       : this._inactiveMenuItems;
         const curMenu        = menu == this.Menu.ACTIVE_APPLICATIONS ? this.cmitemActiveItems.menu : this.cmitemInactiveItems.menu;
-        const otherMenuItems = menu == this.Menu.ACTIVE_APPLICATIONS ? this._inactiveMenuItems      : this._activeMenuItems;
+        const otherMenuItems = menu == this.Menu.ACTIVE_APPLICATIONS ? this._inactiveMenuItems     : this._activeMenuItems;
         let   menuItem       = null;
 
         // If there's a menu item in the other menu, delete it
@@ -735,6 +734,28 @@ CollapsibleSystrayApplet.prototype = {
             }));
 
             this._registerAppIcon(appIndicator.id, iconActor.actor);
+        }
+    },
+
+    /*
+     * The applet's orientation changed; adapt accordingly
+     */
+    on_orientation_changed: function(orientation) {
+        global.log("[" + uuid + "] Event: on_orientation_changed");
+
+        CinnamonSystray.MyApplet.prototype.on_orientation_changed.call(this, orientation);
+
+        this.orientation = orientation;
+        this._direction  = (orientation == St.Side.TOP || orientation == St.Side.BOTTOM) ? this.Direction.HORIZONTAL : this.Direction.VERTICAL;
+
+        if (this._direction == this.Direction.VERTICAL) {
+            this.mainLayout.set_vertical(true);
+            this.hiddenIconsContainer.set_vertical(true);
+            this.shownIconsContainer.set_vertical(true);
+        } else {
+            this.mainLayout.set_vertical(false);
+            this.hiddenIconsContainer.set_vertical(false);
+            this.shownIconsContainer.set_vertical(false);
         }
     },
 
