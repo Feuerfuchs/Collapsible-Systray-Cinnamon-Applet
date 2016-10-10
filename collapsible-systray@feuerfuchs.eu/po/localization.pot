@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-21 17:19+0200\n"
+"POT-Creation-Date: 2016-10-10 09:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: applet.js:126
+#: applet.js:123
 msgid "Active applications"
 msgstr ""
 
-#: applet.js:127
+#: applet.js:124
 msgid "Inactive applications"
 msgstr ""
 
@@ -78,6 +78,16 @@ msgstr ""
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->icon-visibility-
 #. list->description
 msgid "Internal use"
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->sort-
+#. icons->description
+msgid "Sort icons by name"
+msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->sort-
+#. icons->tooltip
+msgid "If unchecked, the order of the icons will be pretty much random"
 msgstr ""
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->tray-icon-

@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: collapsible-systray@feuerfuchs.eu 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-21 17:19+0200\n"
-"PO-Revision-Date: 2016-08-21 17:20+0200\n"
+"POT-Creation-Date: 2016-10-10 09:27+0200\n"
+"PO-Revision-Date: 2016-10-10 09:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: Feuerfuchs\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.9\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: applet.js:126
+#: applet.js:123
 msgid "Active applications"
 msgstr "Aktive Anwendungen"
 
-#: applet.js:127
+#: applet.js:124
 msgid "Inactive applications"
 msgstr "Inaktive Anwendungen"
 
@@ -80,6 +80,16 @@ msgstr "Erweitern-Symbol (horizontal): "
 #. list->description
 msgid "Internal use"
 msgstr ""
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->sort-
+#. icons->description
+msgid "Sort icons by name"
+msgstr "Symbole nach Namen sortieren"
+
+#. collapsible-systray@feuerfuchs.eu->settings-schema.json->sort-
+#. icons->tooltip
+msgid "If unchecked, the order of the icons will be pretty much random"
+msgstr "Wenn inaktiv, dann ist die Reihenfolge willkürlich"
 
 #. collapsible-systray@feuerfuchs.eu->settings-schema.json->tray-icon-
 #. padding->description
