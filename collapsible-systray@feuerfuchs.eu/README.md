@@ -11,6 +11,7 @@ This applet is a replacement for the popular but, sadly, abandonded [System Tray
   * **Collapse on un-hover delay** — The delay before the tray collapses on un-hover
   * **Startup collapse delay** — The tray collapses automatically when it is loaded. You can define a delay here during which all icons are visible.
 * **Appearance**
+  * **Sort icons by name** — If disabled, the icons' order will be random
   * **Disable hover effect for tray icons** — If you have problems with the hover effect or it simply doesn't look good, you should enable this setting
   * **Horizontal expand icon** — The icon used for the expand/collapse button if the tray is collapsed
   * **Horizontal collapse icon** — The icon used for the expand/collapse button if the tray is expanded
