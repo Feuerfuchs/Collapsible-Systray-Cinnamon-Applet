@@ -22,7 +22,7 @@ This applet's main purpose is to integrate tray icons seamlessly into your deskt
   * **Padding of tray icons** — Depending on the theme used the spacing between applets is different from the default tray icon spacing. You can adjust the tray icon spacing here.
 
 
-# Installation
+# Manual installation
 
 To install the applet, execute the `install.sh` script. If the applet doesn't appear in the applet list, you should restart Cinnamon by pressing Alt+F2, typing 'r' (without ') and hitting enter.
 To remove the applet, just run `install.sh -r`.
