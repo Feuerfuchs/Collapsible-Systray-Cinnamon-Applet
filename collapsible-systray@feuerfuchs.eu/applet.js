@@ -226,9 +226,6 @@ CollapsibleSystrayApplet.prototype = {
         }
         container.insert_actor(actor, index);
 
-        const [minWidth,  natWidth]  = actor.get_preferred_width(-1);
-        const [minHeight, natHeight] = actor.get_preferred_height(-1);
-
         actor.appID = id;
 
         if (this._iconsAreHidden && !this.iconVisibilityList[id]) {
@@ -475,7 +472,8 @@ CollapsibleSystrayApplet.prototype = {
             }
 
             instances.forEach(Lang.bind(this, function(actor, index) {
-                actor.reparent(container);
+                actor.get_parent().remove_child(actor);
+                container.add_child(actor);
                 container.set_child_at_index(actor, index);
 
                 if (this._iconsAreHidden) {
