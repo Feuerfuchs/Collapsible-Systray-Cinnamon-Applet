@@ -8,9 +8,8 @@
         "3.4"
     ], 
     "max-instances": 1, 
-    "dangerous": false, 
     "description": "A replacement for the abandoned System Tray Collapsible Cinnamon applet", 
-    "version": "1.8", 
+    "version": "1.9", 
     "icon": "indicator-applet", 
     "name": "Collapsible Systray"
 }
