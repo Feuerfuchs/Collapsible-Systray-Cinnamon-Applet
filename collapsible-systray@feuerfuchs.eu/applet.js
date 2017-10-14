@@ -765,6 +765,14 @@ CollapsibleSystrayApplet.prototype = {
 
         CinnamonSystray.MyApplet.prototype._onIndicatorAdded.call(this, manager, appIndicator);
 
+        let id = appIndicator.id;
+        
+        if (appIndicator.id.trim() == "")
+        {
+            global.logError("[" + uuid + "] Indicator ID is empty. It's probably Dropbox being \"special\" once again.");
+            id = "[empty name]";
+        }
+
         if (appIndicator.id in this._shellIndicators) {
             const iconActor = this._shellIndicators[appIndicator.id];
 
@@ -779,10 +787,10 @@ CollapsibleSystrayApplet.prototype = {
             }
             iconActor.actor.csEnableAfter = function() { }
             iconActor.actor.connect('destroy', Lang.bind(this, function() {
-                this._unregisterAppIcon(appIndicator.id, iconActor.actor);
+                this._unregisterAppIcon(id, iconActor.actor);
             }));
 
-            this._registerAppIcon(appIndicator.id, iconActor.actor);
+            this._registerAppIcon(id, iconActor.actor);
         }
     },
 
