@@ -1,6 +1,6 @@
 This applet's main purpose is to integrate tray icons seamlessly into your desktop and allowing you to hide icons you rarely need.
 
-**IMPORTANT**: Due to the way Cinnamon handles tray icons, you can only use *one* tray applet at a time. So if you want to use this applet, please be sure you arenm't using any other tray applets such as the default one. Otherwise Cinnamon might become unstable or even crash.
+**IMPORTANT**: Due to the way Cinnamon handles tray icons, you can only use *one* tray applet at a time. So if you want to use this applet, please be sure you aren't using any other tray applets such as the default one. Otherwise Cinnamon might become unstable or even crash.
 
 
 # Settings documentation
