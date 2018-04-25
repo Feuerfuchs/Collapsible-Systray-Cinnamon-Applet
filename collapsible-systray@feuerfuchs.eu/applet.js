@@ -384,6 +384,7 @@ CollapsibleSystrayApplet.prototype = {
             this.hiddenIconsContainer.tweenParams = {
                 time:       this.animationDuration / 1000,
                 transition: 'easeInOutQuart',
+                rounded:    true,
                 onComplete: onFinished
             }
 
@@ -446,6 +447,7 @@ CollapsibleSystrayApplet.prototype = {
             this.hiddenIconsContainer.tweenParams = {
                 time:       this.animationDuration / 1000,
                 transition: 'easeInOutQuart',
+                rounded:    true,
                 onComplete: onFinished
             };
 
