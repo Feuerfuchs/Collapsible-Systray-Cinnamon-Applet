@@ -741,18 +741,18 @@ CollapsibleSystrayApplet.prototype = {
             iconWrap.csEnableAfter = function() { }
         } else if (["pidgin", "pamac-tray", "slack", "unknown", "[empty name]"].indexOf(role) != -1) {
             iconWrap.csDisable = function() {
-                icon.window.hide();
+                icon.hide();
             }
             iconWrap.csEnable = function() { }
             iconWrap.csEnableAfter = function() {
-                icon.window.show();
+                icon.show();
             }
         } else {
             iconWrap.csDisable = function() {
-                icon.window.hide();
+                icon.hide();
             }
             iconWrap.csEnable = function() {
-                icon.window.show();
+                icon.show();
             }
             iconWrap.csEnableAfter = function() { }
         }
