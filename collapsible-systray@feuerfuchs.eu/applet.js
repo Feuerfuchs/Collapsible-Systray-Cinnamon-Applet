@@ -739,7 +739,7 @@ CollapsibleSystrayApplet.prototype = {
                 iconWrapContent.set_child(icon);
             }
             iconWrap.csEnableAfter = function() { }
-        } else if (["pidgin"].indexOf(role) != -1) {
+        } else if (["pidgin", "pamac-tray", "slack", "unknown", "[empty name]"].indexOf(role) != -1) {
             iconWrap.csDisable = function() {
                 icon.window.hide();
             }
